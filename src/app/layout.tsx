@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./providers/AuthProviders";
 import ProgressBarProviders from "@/components/providers/ProgressBarProvider";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -22,7 +23,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
         <ProgressBarProviders>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <Toaster position="top-right" richColors />
+            {children}
+          </AuthProvider>
         </ProgressBarProviders>
       </body>
     </html>

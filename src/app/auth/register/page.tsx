@@ -30,7 +30,7 @@ type ApiResponse = {
 };
 
 const RegisterPage = () => {
-  const { register, state } = useAuth();
+  const { register } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -76,10 +76,6 @@ const RegisterPage = () => {
       setApiResponse(err?.response?.data);
     }
   };
-
-  if (state === "AUTHENTICATED") {
-    router.push("/");
-  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/5 via-accent/10 to-primary/5 backdrop-blur-3xl">
