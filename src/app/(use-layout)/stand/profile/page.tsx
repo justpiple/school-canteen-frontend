@@ -6,8 +6,12 @@ import { ApiResponse } from "@/lib/auth/apiClient";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
+import { Loader2, Store, User } from "lucide-react";
+import { useAuth } from "@/components/providers/AuthProviders";
 
 interface StandData {
   standName: string;
@@ -15,14 +19,24 @@ interface StandData {
   phone: string;
 }
 
+interface UserData {
+  username: string;
+  password: string;
+}
+
 const ProfilePage = () => {
+  const { user } = useAuth();
   const [standData, setStandData] = useState<StandData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<StandData>({
     standName: "",
     ownerName: "",
     phone: "",
+  });
+  const [userData, setUserData] = useState<UserData>({
+    username: "",
+    password: "",
   });
 
   useEffect(() => {
@@ -53,16 +67,21 @@ const ProfilePage = () => {
     fetchStandData();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleStandChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserData((prev) => ({ ...prev, [name]: value }));
+  };
 
-    const toastId = toast.loading("Loading...");
+  const handleStandSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const toastId = toast.loading("Menyimpan data stand...");
     const apiClient = browserApiClient();
     try {
       let response;
@@ -81,7 +100,7 @@ const ProfilePage = () => {
       }
       if (response.status === "success") {
         setStandData(response.data);
-        toast.success("Data berhasil disimpan", { id: toastId });
+        toast.success("Data stand berhasil disimpan", { id: toastId });
       } else {
         toast.error(response.message, { id: toastId });
       }
@@ -91,77 +110,161 @@ const ProfilePage = () => {
           ? err.response?.data?.message || err.message
           : err.message;
       toast.error(errorMessage, { id: toastId });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleUserSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const toastId = toast.loading("Memperbarui data user...");
+    const apiClient = browserApiClient();
+    try {
+      const { data: response } = await apiClient.patch<ApiResponse<UserData>>(
+        "/users/me",
+        userData,
+      );
+
+      if (response.status === "success") {
+        toast.success("Data user berhasil diperbarui", { id: toastId });
+        setUserData((prev) => ({ ...prev, password: "" }));
+      } else {
+        toast.error(response.message, { id: toastId });
+      }
+    } catch (err: any) {
+      const errorMessage =
+        err instanceof AxiosError
+          ? err.response?.data?.message || err.message
+          : err.message;
+      toast.error(errorMessage, { id: toastId });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   if (loading) {
     return (
-      <div className="max-w-md mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Profile Stand</h1>
+      <div className="container max-w-md mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">Profile</h1>
         <Card className="p-4">
-          <p>Loading...</p>
+          <div className="flex items-center justify-center">
+            <Loader2 className="h-6 w-6 animate-spin" />
+          </div>
         </Card>
       </div>
     );
   }
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Profile Stand</h1>
-      <Card className="p-4">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="standName" className="block">
-              Stand Name
-            </label>
-            <Input
-              type="text"
-              id="standName"
-              name="standName"
-              value={formData.standName}
-              onChange={handleChange}
-              required
-              autoComplete="off"
-            />
-          </div>
-          <div>
-            <label htmlFor="ownerName" className="block">
-              Owner Name
-            </label>
-            <Input
-              type="text"
-              id="ownerName"
-              name="ownerName"
-              value={formData.ownerName}
-              onChange={handleChange}
-              autoComplete="off"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="phone" className="block">
-              Phone
-            </label>
-            <Input
-              type="text"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              autoComplete="off"
-              required
-            />
-          </div>
-          <Button type="submit" className="w-full">
-            Simpan
-          </Button>
-        </form>
-        {error && (
-          <div className="mt-4 text-red-500">
-            <p>{error}</p>
-          </div>
-        )}
-      </Card>
+    <div className="container max-w-md mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Profile</h1>
+      <Tabs defaultValue="stand" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsTrigger value="stand" className="flex items-center gap-2">
+            <Store className="h-4 w-4" />
+            Stand
+          </TabsTrigger>
+          <TabsTrigger value="user" className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            User
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="stand">
+          <Card className="p-4">
+            <form onSubmit={handleStandSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="standName">Stand Name</Label>
+                <Input
+                  type="text"
+                  id="standName"
+                  name="standName"
+                  value={formData.standName}
+                  onChange={handleStandChange}
+                  required
+                  autoComplete="off"
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="ownerName">Owner Name</Label>
+                <Input
+                  type="text"
+                  id="ownerName"
+                  name="ownerName"
+                  value={formData.ownerName}
+                  onChange={handleStandChange}
+                  autoComplete="off"
+                  required
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleStandChange}
+                  autoComplete="off"
+                  required
+                  disabled={isSubmitting}
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Save Stand Data
+              </Button>
+            </form>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="user">
+          <Card className="p-4">
+            <form onSubmit={handleUserSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={userData.username || user?.username}
+                  onChange={handleUserChange}
+                  required
+                  autoComplete="off"
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">New Baru</Label>
+                <Input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={userData.password}
+                  onChange={handleUserChange}
+                  autoComplete="new-password"
+                  disabled={isSubmitting}
+                />
+                <p className="text-sm text-muted-foreground">
+                  Leave blank if you do not want to change the password
+                </p>
+              </div>
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Save User Data
+              </Button>
+            </form>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
