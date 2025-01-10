@@ -82,7 +82,7 @@ export function AppShell({ children, user }: Readonly<AppShellProps>) {
         </div>
       </header>
       <main className="flex-1">
-        <div className="container px-4 py-6 md:px-6 md:py-8 lg:py-10">
+        <div className="container px-4 py-6 md:px-6 md:py-8 lg:py-10 mx-auto">
           {children}
         </div>
       </main>
