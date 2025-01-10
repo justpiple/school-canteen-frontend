@@ -6,10 +6,10 @@ import Link from "next/link";
 import {
   Home,
   ShoppingBag,
-  Heart,
   Utensils,
   Percent,
-  HomeIcon,
+  UserIcon,
+  ScrollText,
 } from "lucide-react";
 
 interface NavItem {
@@ -27,23 +27,23 @@ export function AppShell({ children, user }: Readonly<AppShellProps>) {
   const navigationItems: Record<string, NavItem[]> = {
     SUPERADMIN: [],
     STUDENT: [
-      { title: "Beranda", href: "/", icon: <Home className="h-5 w-5" /> },
+      { title: "Home", href: "/student", icon: <Home className="h-5 w-5" /> },
       {
-        title: "Pesanan",
-        href: "/orders",
-        icon: <ShoppingBag className="h-5 w-5" />,
+        title: "Orders",
+        href: "/student/orders",
+        icon: <ScrollText className="h-5 w-5" />,
       },
       {
-        title: "Favorit",
-        href: "/favorites",
-        icon: <Heart className="h-5 w-5" />,
+        title: "Profile",
+        href: "/student/profile",
+        icon: <UserIcon className="h-5 w-5" />,
       },
     ],
     ADMIN_STAND: [
       {
         title: "Home",
         href: "/stand",
-        icon: <HomeIcon className="h-5 w-5" />,
+        icon: <Home className="h-5 w-5" />,
       },
       {
         title: "Orders",
