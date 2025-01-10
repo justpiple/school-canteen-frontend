@@ -1,4 +1,5 @@
-import createApiClient from "./apiClient";
+import { AxiosError, AxiosRequestConfig } from "axios";
+import createApiClient, { ApiResponse } from "./apiClient";
 import { parseCookies } from "nookies";
 
 export const browserApiClient = () => {
@@ -9,4 +10,22 @@ export const browserApiClient = () => {
   const { access_token: token } = parseCookies();
 
   return createApiClient(token);
+};
+
+export const apiClient = async (
+  config: AxiosRequestConfig<any>,
+): Promise<ApiResponse> => {
+  const client = browserApiClient();
+
+  try {
+    const { data: response } = await client(config);
+
+    return response as ApiResponse;
+  } catch (err) {
+    if (err instanceof AxiosError && err.response?.data) {
+      return err.response.data as ApiResponse;
+    } else {
+      throw err;
+    }
+  }
 };
