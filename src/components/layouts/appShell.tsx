@@ -7,9 +7,9 @@ import {
   Home,
   ShoppingBag,
   Heart,
-  LayoutDashboard,
   Utensils,
   Percent,
+  HomeIcon,
 } from "lucide-react";
 
 interface NavItem {
@@ -27,38 +27,38 @@ export function AppShell({ children, user }: Readonly<AppShellProps>) {
   const navigationItems: Record<string, NavItem[]> = {
     SUPERADMIN: [],
     STUDENT: [
-      { title: "Beranda", href: "/", icon: <Home className="h-4 w-4 mr-2" /> },
+      { title: "Beranda", href: "/", icon: <Home className="h-5 w-5" /> },
       {
         title: "Pesanan",
         href: "/orders",
-        icon: <ShoppingBag className="h-4 w-4 mr-2" />,
+        icon: <ShoppingBag className="h-5 w-5" />,
       },
       {
         title: "Favorit",
         href: "/favorites",
-        icon: <Heart className="h-4 w-4 mr-2" />,
+        icon: <Heart className="h-5 w-5" />,
       },
     ],
     ADMIN_STAND: [
       {
-        title: "Dashboard",
+        title: "Home",
         href: "/stand",
-        icon: <LayoutDashboard className="h-4 w-4 mr-2" />,
+        icon: <HomeIcon className="h-5 w-5" />,
       },
       {
         title: "Orders",
         href: "/stand/orders",
-        icon: <ShoppingBag className="h-4 w-4 mr-2" />,
+        icon: <ShoppingBag className="h-5 w-5" />,
       },
       {
         title: "Menu",
         href: "/stand/menu",
-        icon: <Utensils className="h-4 w-4 mr-2" />,
+        icon: <Utensils className="h-5 w-5" />,
       },
       {
         title: "Discounts",
         href: "/stand/discounts",
-        icon: <Percent className="h-4 w-4 mr-2" />,
+        icon: <Percent className="h-5 w-5" />,
       },
     ],
   };
@@ -68,13 +68,10 @@ export function AppShell({ children, user }: Readonly<AppShellProps>) {
   return (
     <div className="relative flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-          <div className="flex items-center space-x-4">
-            <MobileNav items={items} />
-            <Link href="/" className="flex items-center space-x-2">
-              <span className="font-bold text-xl">Canteen App</span>
-            </Link>
-          </div>
+        <div className="container flex h-16 items-center justify-between px-4">
+          <Link href="/" className="flex items-center space-x-2">
+            <span className="font-bold text-xl">Canteen App</span>
+          </Link>
           <MainNav items={items} className="mx-6 hidden md:flex" />
           <div className="flex items-center space-x-4">
             <UserNav user={user} />
@@ -82,10 +79,11 @@ export function AppShell({ children, user }: Readonly<AppShellProps>) {
         </div>
       </header>
       <main className="flex-1">
-        <div className="container px-4 py-6 md:px-6 md:py-8 lg:py-10 mx-auto">
+        <div className="container px-4 py-6 mx-auto mb-16 md:mb-0">
           {children}
         </div>
       </main>
+      <MobileNav items={items} />
     </div>
   );
 }
