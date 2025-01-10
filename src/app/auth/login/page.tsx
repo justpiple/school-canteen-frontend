@@ -61,7 +61,7 @@ const LoginPage = () => {
               <AlertDescription>
                 {Array.isArray(error) ? (
                   <ul className="list-disc pl-4">
-                    {error.map((err, index) => (
+                    {error.map((err) => (
                       <li key={err}>{err}</li>
                     ))}
                   </ul>

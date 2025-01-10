@@ -38,7 +38,7 @@ const LogoutPage = () => {
       logout();
       setLogoutMessage("You have been successfully logged out.");
       setTimeout(() => router.push("/auth/login"), 2000);
-    } catch (error) {
+    } catch {
       setLogoutMessage(
         "An error occurred while logging out. Please try again.",
       );
@@ -66,8 +66,8 @@ const LogoutPage = () => {
             </Alert>
           )}
           <p className="text-center text-muted-foreground">
-            Logging out will end your current session. You'll need to log in
-            again to place orders or manage your account.
+            Logging out will end your current session. You&lsquo;ll need to log
+            in again to place orders or manage your account.
           </p>
           <Button
             onClick={() => setShowConfirmDialog(true)}

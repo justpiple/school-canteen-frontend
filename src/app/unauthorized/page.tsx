@@ -26,7 +26,7 @@ const UnauthorizedPage = () => {
             Unauthorized Access
           </CardTitle>
           <CardDescription className="text-lg mt-2">
-            Oops! You don't have permission to access this page.
+            Oops! You don&lsquo;t have permission to access this page.
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">

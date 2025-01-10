@@ -44,7 +44,7 @@ export default function DiscountCRUDPage() {
     });
 
     if (isConfirmed) {
-      const { id, ...discount } = newDiscount;
+      const { id, ...discount } = newDiscount; // eslint-disable-line @typescript-eslint/no-unused-vars
       const toastId = toast.loading("Loading...");
       const postDiscount = await apiClient({
         url: `/discounts`,
