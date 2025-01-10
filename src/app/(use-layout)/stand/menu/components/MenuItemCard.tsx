@@ -49,7 +49,7 @@ export function MenuItemCard({
             className="rounded-md"
           />
         </div>
-        <div className="flex-grow">
+        <div className="flex-grow mt-2">
           <p className="text-sm text-muted-foreground">{item.description}</p>
           <p className="font-bold">Rp {item.price.toLocaleString()}</p>
           <p className="text-sm">{item.type}</p>
