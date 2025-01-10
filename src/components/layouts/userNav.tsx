@@ -11,10 +11,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { User } from "@/app/providers/AuthProviders";
+import { Role, User } from "@/app/providers/AuthProviders";
 import { logout } from "@/lib/auth/getServerSession";
+import { useRouter } from "next-nprogress-bar";
 
 export function UserNav({ user }: Readonly<{ user: User }>) {
+  const router = useRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -34,9 +36,17 @@ export function UserNav({ user }: Readonly<{ user: User }>) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="px-4 py-2.5">Profil</DropdownMenuItem>
-          <DropdownMenuItem className="px-4 py-2.5">
-            Pengaturan
+          <DropdownMenuItem
+            className="px-4 py-2.5"
+            onClick={() =>
+              router.push(
+                `/${
+                  user.role === Role["ADMIN_STAND"] ? "stand" : "student"
+                }/profile`,
+              )
+            }
+          >
+            Profil
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

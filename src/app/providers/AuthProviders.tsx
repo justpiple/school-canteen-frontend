@@ -9,10 +9,15 @@ import {
 import { logout as logoutUtil } from "@/lib/auth/getServerSession";
 import { setCookie, parseCookies } from "nookies";
 
+export enum Role {
+  STUDENT = "STUDENT",
+  ADMIN_STAND = "ADMIN_STAND",
+  SUPERADMIN = "SUPERADMIN",
+}
 export interface User {
   id: string;
   username: string;
-  role: "STUDENT" | "ADMIN_STAND" | "SUPERADMIN";
+  role: Role;
 }
 
 const LOGIN_PATH = "/auth/login";
