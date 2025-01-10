@@ -4,14 +4,22 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetFooter,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { Menu, LogOut } from "lucide-react";
+
+interface NavItem {
+  title: string;
+  href: string;
+  icon: React.ReactNode;
+}
 
 interface MobileNavProps {
-  items: { title: string; href: string }[];
+  items: NavItem[];
 }
 
 export function MobileNav({ items }: Readonly<MobileNavProps>) {
@@ -19,27 +27,37 @@ export function MobileNav({ items }: Readonly<MobileNavProps>) {
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="md:hidden">
-          <Menu className="h-5 w-5" />
+          <Menu className="h-6 w-6" />
           <span className="sr-only">Toggle menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-full max-w-xs">
-        <SheetHeader className="px-4 py-6">
-          <SheetTitle className="text-lg font-bold">Menu</SheetTitle>
+      <SheetContent side="left" className="w-full max-w-xs p-0">
+        <SheetHeader className="px-6 py-4">
+          <SheetTitle className="text-xl font-bold">Canteen App</SheetTitle>
         </SheetHeader>
         <ScrollArea className="h-[calc(100vh-8rem)]">
-          <div className="flex flex-col space-y-2 px-4 py-2">
+          <div className="flex flex-col py-2">
             {items.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="block rounded-md px-4 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+                className="flex items-center px-6 py-3 text-sm font-medium transition-colors hover:bg-primary hover:text-accent-foreground"
               >
+                {item.icon}
                 {item.title}
               </Link>
             ))}
           </div>
         </ScrollArea>
+        <Separator />
+        <SheetFooter className="px-6 py-4">
+          <Button variant="outline" className="w-full hover:bg-primary" asChild>
+            <Link href="/logout" className="flex items-center justify-center">
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Link>
+          </Button>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

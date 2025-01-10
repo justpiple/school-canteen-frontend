@@ -3,6 +3,20 @@ import { MainNav } from "./mainNav";
 import { MobileNav } from "./mobileNav";
 import { UserNav } from "./userNav";
 import Link from "next/link";
+import {
+  Home,
+  ShoppingBag,
+  Heart,
+  LayoutDashboard,
+  Utensils,
+  Percent,
+} from "lucide-react";
+
+interface NavItem {
+  title: string;
+  href: string;
+  icon: React.ReactNode;
+}
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -10,21 +24,46 @@ interface AppShellProps {
 }
 
 export function AppShell({ children, user }: Readonly<AppShellProps>) {
-  const navigationItems = {
+  const navigationItems: Record<string, NavItem[]> = {
     SUPERADMIN: [],
     STUDENT: [
-      { title: "Beranda", href: "/" },
-      { title: "Pesanan", href: "/orders" },
-      { title: "Favorit", href: "/favorites" },
+      { title: "Beranda", href: "/", icon: <Home className="h-4 w-4 mr-2" /> },
+      {
+        title: "Pesanan",
+        href: "/orders",
+        icon: <ShoppingBag className="h-4 w-4 mr-2" />,
+      },
+      {
+        title: "Favorit",
+        href: "/favorites",
+        icon: <Heart className="h-4 w-4 mr-2" />,
+      },
     ],
     ADMIN_STAND: [
-      { title: "Dashboard", href: "/seller" },
-      { title: "Menu", href: "/seller/menu" },
-      { title: "Pesanan", href: "/seller/orders" },
+      {
+        title: "Dashboard",
+        href: "/stand",
+        icon: <LayoutDashboard className="h-4 w-4 mr-2" />,
+      },
+      {
+        title: "Orders",
+        href: "/stand/orders",
+        icon: <ShoppingBag className="h-4 w-4 mr-2" />,
+      },
+      {
+        title: "Menu",
+        href: "/stand/menu",
+        icon: <Utensils className="h-4 w-4 mr-2" />,
+      },
+      {
+        title: "Discounts",
+        href: "/stand/discounts",
+        icon: <Percent className="h-4 w-4 mr-2" />,
+      },
     ],
   };
 
-  const items = navigationItems[user.role];
+  const items = navigationItems[user.role] || [];
 
   return (
     <div className="relative flex min-h-screen flex-col">
@@ -33,7 +72,7 @@ export function AppShell({ children, user }: Readonly<AppShellProps>) {
           <div className="flex items-center space-x-4">
             <MobileNav items={items} />
             <Link href="/" className="flex items-center space-x-2">
-              <span className="font-bold text-xl">Food App</span>
+              <span className="font-bold text-xl">Canteen App</span>
             </Link>
           </div>
           <MainNav items={items} className="mx-6 hidden md:flex" />
