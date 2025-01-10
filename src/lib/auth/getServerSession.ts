@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { getSession } from "./authUtils";
-import { User } from "@/app/providers/AuthProviders";
+import { User } from "@/components/providers/AuthProviders";
 
 export const getServerSession = async (): Promise<User | null> => {
   const userCookies = await cookies();

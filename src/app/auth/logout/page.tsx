@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/app/providers/AuthProviders";
+import { useAuth } from "@/components/providers/AuthProviders";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next-nprogress-bar";
 import {

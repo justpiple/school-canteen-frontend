@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth/getServerSession";
-import { User } from "@/app/providers/AuthProviders";
+import { User } from "@/components/providers/AuthProviders";
 
 export const middleware = async (req: NextRequest) => {
   const session: User | null = await getServerSession();

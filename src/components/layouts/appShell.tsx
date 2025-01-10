@@ -1,4 +1,4 @@
-import { User } from "@/app/providers/AuthProviders";
+import { User } from "@/components/providers/AuthProviders";
 import { MainNav } from "./mainNav";
 import { MobileNav } from "./mobileNav";
 import { UserNav } from "./userNav";

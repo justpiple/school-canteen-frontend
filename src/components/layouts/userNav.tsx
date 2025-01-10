@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Role, User } from "@/app/providers/AuthProviders";
+import { Role, User } from "@/components/providers/AuthProviders";
 import { logout } from "@/lib/auth/getServerSession";
 import { useRouter } from "next-nprogress-bar";
 

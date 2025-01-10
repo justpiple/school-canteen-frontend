@@ -1,5 +1,5 @@
 import createApiClient from "./apiClient";
-import { User } from "@/app/providers/AuthProviders";
+import { User } from "@/components/providers/AuthProviders";
 
 export const login = async (
   username: string,
