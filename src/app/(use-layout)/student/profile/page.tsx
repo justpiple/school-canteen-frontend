@@ -65,7 +65,7 @@ const ProfilePage = () => {
         }
       } catch (err) {
         const e = err as Error;
-        if (e.message.includes("do not")) {
+        if (e.message.includes("not found")) {
           toast.error("Profile not found.");
           setNewStudent(true);
         } else {
