@@ -8,10 +8,7 @@ import { apiClient } from "@/lib/auth/browserApiClient";
 import { toast } from "sonner";
 
 export function OrderCard({ order }: Readonly<{ order: Order }>) {
-  const totalAmount = order.items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  );
+  const totalAmount = order.items.reduce((sum, item) => sum + item.price, 0);
 
   const statusColors: Record<Order["status"], string> = {
     PENDING: "bg-yellow-500",
