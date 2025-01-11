@@ -3,6 +3,7 @@ import axios, { AxiosInstance } from "axios";
 const DEFAULT_API_URL = "http://localhost:3000";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ApiResponse<T = any> {
   status: string;
   message: string | string[];

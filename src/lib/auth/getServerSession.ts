@@ -1,8 +1,25 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { getSession } from "./authUtils";
 import { User } from "@/components/providers/AuthProviders";
+import { apiClientServer } from "./serverApiClient";
+
+const getSession = async (token: string): Promise<User | null> => {
+  const response = await apiClientServer({
+    method: "get",
+    url: "/users/me",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.status === "success") {
+    const { id, username, role } = response.data;
+    return { id, username, role };
+  }
+
+  return null;
+};
 
 export const getServerSession = async (): Promise<User | null> => {
   const userCookies = await cookies();

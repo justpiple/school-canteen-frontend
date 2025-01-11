@@ -13,6 +13,7 @@ export const browserApiClient = () => {
 };
 
 export const apiClient = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config: AxiosRequestConfig<any>,
 ): Promise<ApiResponse> => {
   const client = browserApiClient();

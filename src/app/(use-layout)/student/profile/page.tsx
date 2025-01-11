@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Loader2, User, GraduationCap } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProviders";
+import { removeEmptyObjects } from "@/utils/atomics";
 
 interface StudentData {
   id?: string;
@@ -42,6 +43,10 @@ const ProfilePage = () => {
   });
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [newStudent, setNewStudent] = useState(false);
+
+  useEffect(() => {
+    setUserData((prev) => ({ ...prev, username: user?.username || "" }));
+  }, [user]);
 
   useEffect(() => {
     const fetchStudentData = async () => {
@@ -150,10 +155,11 @@ const ProfilePage = () => {
 
     const toastId = toast.loading("Updating user data...");
     const apiClient = browserApiClient();
+    const cleanedUserData = removeEmptyObjects(userData);
     try {
       const { data: response } = await apiClient.patch<ApiResponse<UserData>>(
         "/users/me",
-        userData,
+        cleanedUserData,
       );
 
       if (response.status === "success") {
@@ -281,7 +287,7 @@ const ProfilePage = () => {
                   type="text"
                   id="username"
                   name="username"
-                  value={userData.username || user?.username}
+                  value={userData.username}
                   onChange={handleUserChange}
                   required
                   autoComplete="off"

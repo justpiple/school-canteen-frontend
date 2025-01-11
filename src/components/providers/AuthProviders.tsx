@@ -8,6 +8,7 @@ import {
 } from "@/lib/auth/authUtils";
 import { logout as logoutUtil } from "@/lib/auth/getServerSession";
 import { setCookie, parseCookies } from "nookies";
+import { ApiResponse } from "@/lib/auth/apiClient";
 
 export enum Role {
   STUDENT = "STUDENT",
@@ -30,7 +31,7 @@ interface AuthContextType {
     username: string,
     password: string,
     role: string,
-  ) => Promise<{ status: string; message: string }>;
+  ) => Promise<ApiResponse>;
   getSession: () => Promise<User | null>;
   logout: () => void;
 }
@@ -43,30 +44,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const [state, setState] = useState<AuthContextType["state"]>("LOADING");
 
-  useEffect(() => {
-    const initializeSession = async () => {
-      const userData = await getSession();
-
-      if (!userData) {
-        setState("LOGGED_OUT");
-
-        if (window.location.pathname !== LOGIN_PATH) {
-          setTimeout(() => {
-            window.location.href = LOGIN_PATH;
-          }, 2000);
-        }
-        return;
-      }
-
-      setUser(userData);
-      setState("AUTHENTICATED");
-    };
-
-    initializeSession();
-  }, []);
-
   const login = async (username: string, password: string): Promise<User> => {
-    const { access_token, id, role } = await loginUtil(username, password);
+    const response = await loginUtil(username, password);
+
+    if (response.statusCode !== 200) throw response;
+
+    const { access_token, id, role } = response.data;
 
     setCookie(null, "access_token", access_token, { path: "/" });
     const loggedInUser = { id, username, role };
@@ -76,11 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return loggedInUser;
   };
 
-  const register = async (
-    username: string,
-    password: string,
-    role: string,
-  ): Promise<{ status: string; message: string }> => {
+  const register = async (username: string, password: string, role: string) => {
     return registerUtil(username, password, role);
   };
 
@@ -106,6 +85,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       window.location.reload();
     }, 2000);
   };
+
+  useEffect(() => {
+    const initializeSession = async () => {
+      const userData = await getSession();
+
+      if (!userData) {
+        setState("LOGGED_OUT");
+
+        if (window.location.pathname !== LOGIN_PATH) {
+          setTimeout(() => {
+            window.location.href = LOGIN_PATH;
+          }, 2000);
+        }
+        return;
+      }
+
+      setUser(userData);
+      setState("AUTHENTICATED");
+    };
+
+    initializeSession();
+  }, []);
 
   return (
     <AuthContext.Provider

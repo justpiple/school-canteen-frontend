@@ -66,14 +66,10 @@ const RegisterPage = () => {
       return;
     }
 
-    try {
-      const response = await register(username, password, userType);
-      setApiResponse(response as any);
-      if (response.status === "success") {
-        setTimeout(() => router.push("/auth/login"), 2000);
-      }
-    } catch (err: any) {
-      setApiResponse(err?.response?.data);
+    const response = await register(username, password, userType);
+    setApiResponse(response);
+    if (response.status === "success") {
+      setTimeout(() => router.push("/auth/login"), 2000);
     }
   };
 
