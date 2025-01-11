@@ -64,8 +64,9 @@ const ProfilePage = () => {
           toast.error(response.message);
         }
       } catch (err) {
+        console.log(err);
         const e = err as Error;
-        if (e.message.includes("not found")) {
+        if (e.message.includes("404")) {
           toast.error("Profile not found.");
           setNewStudent(true);
         } else {

@@ -60,9 +60,9 @@ const ProfilePage = () => {
       } catch (err) {
         const e = err as Error;
         toast.error(
-          e.message.includes("do not")
-            ? "Anda belum mengisi profil stand"
-            : "Gagal mengambil data",
+          e.message.includes("404")
+            ? "Please fill stand profile"
+            : "Failed to fetch data",
         );
       } finally {
         setLoading(false);
