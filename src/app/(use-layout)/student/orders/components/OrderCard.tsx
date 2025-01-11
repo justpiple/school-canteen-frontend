@@ -42,7 +42,7 @@ export function OrderCard({ order }: Readonly<{ order: Order }>) {
       } else {
         toast.error("Failed to download receipt.");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred while downloading the receipt.");
     }
   };

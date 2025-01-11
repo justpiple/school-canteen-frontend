@@ -48,7 +48,7 @@ export default function HomePage() {
       } else {
         toast.error("Failed to fetch stands.");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred while fetching stands.");
     } finally {
       setIsLoading(false);
@@ -64,7 +64,7 @@ export default function HomePage() {
       } else {
         toast.error("Failed to fetch menu items.");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred while fetching menu items.");
     } finally {
       setIsLoading(false);
@@ -152,7 +152,7 @@ export default function HomePage() {
       } else {
         toast.error("Failed to place order.");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred while placing the order.");
     }
   };
