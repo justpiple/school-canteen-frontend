@@ -1,6 +1,7 @@
 import { CartItem } from "@/types/Menu";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
+import { calculateDiscountedPrice } from "@/utils/atomics";
 
 interface CartButtonProps {
   cart: CartItem[];
@@ -10,7 +11,10 @@ interface CartButtonProps {
 export function CartButton({ cart, onOpenCart }: Readonly<CartButtonProps>) {
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) =>
+      sum +
+      calculateDiscountedPrice(item.price, item.discount?.percentage) *
+        item.quantity,
     0,
   );
 

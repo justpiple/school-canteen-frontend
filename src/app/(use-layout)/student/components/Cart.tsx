@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { calculateDiscountedPrice } from "@/utils/atomics";
 
 interface CartProps {
   isOpen: boolean;
@@ -37,19 +38,14 @@ export function Cart({
   onPlaceOrder,
 }: Readonly<CartProps>) {
   const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
+
   const totalPrice = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) =>
+      sum +
+      calculateDiscountedPrice(item.price, item.discount?.percentage) *
+        item.quantity,
     0,
   );
-
-  const calculateDiscountedPrice = (
-    price: number,
-    discountPercentage: number | undefined,
-  ) => {
-    return discountPercentage
-      ? price - (price * discountPercentage) / 100
-      : price;
-  };
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>

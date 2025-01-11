@@ -25,3 +25,12 @@ export const removeEmptyObjects = <T extends Record<string, any>>(
 
   return newObject;
 };
+
+export const calculateDiscountedPrice = (
+  price: number,
+  discountPercentage: number | undefined,
+) => {
+  return discountPercentage
+    ? price - (price * discountPercentage) / 100
+    : price;
+};

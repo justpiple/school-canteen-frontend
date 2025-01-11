@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Stand, MenuItem, CartItem } from "@/types/Menu";
 import { confirm } from "@/utils/confirm";
 import Image from "next/image";
+import { useRouter } from "next-nprogress-bar";
 
 export default function HomePage() {
   const [stands, setStands] = useState<Stand[]>([]);
@@ -20,9 +21,11 @@ export default function HomePage() {
   );
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     fetchStands();
+    fetchStudentData();
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       setCart(JSON.parse(savedCart));
@@ -38,6 +41,17 @@ export default function HomePage() {
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
+
+  const fetchStudentData = async () => {
+    try {
+      const response = await apiClient({ url: "/students/me" });
+      if (response.statusCode !== 200) {
+        router.push("/student/profile");
+      }
+    } catch {
+      toast.error("An error occurred while fetching student data.");
+    }
+  };
 
   const fetchStands = async () => {
     setIsLoading(true);
@@ -131,6 +145,12 @@ export default function HomePage() {
 
   const placeOrder = async () => {
     try {
+      if (cart.length < 1) {
+        toast.error("Cart is empty.");
+        setIsCartOpen(false);
+        return;
+      }
+
       const orderData = {
         standId: cart[0].standId,
         items: cart.map((item) => ({
