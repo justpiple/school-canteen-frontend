@@ -13,15 +13,10 @@ export default function MenuCRUDPage() {
   const [stand, setStand] = useState<Stand>();
   const router = useRouter();
 
-  const handleAdd = (
-    newItem: Omit<MenuItem, "id" | "createdAt" | "updatedAt" | "standId">,
-  ) => {
+  const handleAdd = (newItem: Omit<MenuItem, "standId">) => {
     if (stand) {
       const item: MenuItem = {
         ...newItem,
-        id: Math.max(...menuItems.map((item) => item.id)) + 1,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
         standId: stand.id,
       };
 
