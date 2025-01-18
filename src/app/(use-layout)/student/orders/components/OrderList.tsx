@@ -13,9 +13,7 @@ export function OrderList({ orders }: Readonly<OrderListProps>) {
           <p className="text-gray-500">No orders found</p>
         </div>
       ) : (
-        orders
-          .toSorted((a, b) => b.id - a.id)
-          .map((order) => <OrderCard key={order.id} order={order} />)
+        orders.map((order) => <OrderCard key={order.id} order={order} />)
       )}
     </div>
   );

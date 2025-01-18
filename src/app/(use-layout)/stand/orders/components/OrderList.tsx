@@ -12,15 +12,13 @@ export function OrderList({
 }: Readonly<OrderListProps>) {
   return (
     <div className="space-y-4">
-      {orders
-        .toSorted((a, b) => b.id - a.id)
-        .map((order) => (
-          <OrderCard
-            key={order.id}
-            order={order}
-            onUpdateStatus={onUpdateStatus}
-          />
-        ))}
+      {orders.map((order) => (
+        <OrderCard
+          key={order.id}
+          order={order}
+          onUpdateStatus={onUpdateStatus}
+        />
+      ))}
     </div>
   );
 }
