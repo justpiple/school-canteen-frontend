@@ -11,14 +11,13 @@ import { Stand, MenuItem, CartItem } from "@/types/Menu";
 import { confirm } from "@/utils/confirm";
 import Image from "next/image";
 import { useRouter } from "next-nprogress-bar";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 export default function HomePage() {
   const [stands, setStands] = useState<Stand[]>([]);
   const [selectedStand, setSelectedStand] = useState<Stand | null>(null);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [cart, setCart] = useState<CartItem[]>(
-    JSON.parse(localStorage.getItem("cart") || "[]"),
-  );
+  const [cart, setCart] = useLocalStorage<CartItem[]>("cart", []);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -26,10 +25,6 @@ export default function HomePage() {
   useEffect(() => {
     fetchStands();
     fetchStudentData();
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    }
   }, []);
 
   useEffect(() => {
@@ -37,10 +32,6 @@ export default function HomePage() {
       fetchMenuItems(selectedStand.id);
     }
   }, [selectedStand]);
-
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
 
   const fetchStudentData = async () => {
     try {
@@ -178,7 +169,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20" suppressHydrationWarning>
       <div className="mx-auto max-w-md sm:p-6 md:max-w-2xl lg:max-w-4xl min-h-screen p-4">
         <h1 className="text-3xl font-bold mb-4">Food Ordering App</h1>
         {isLoading ? (

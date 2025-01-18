@@ -36,7 +36,7 @@ export function MenuList({ menuItems, onAddToCart }: Readonly<MenuListProps>) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {menuItems.map((item) => (
-        <Card key={item.id} className="overflow-hidden">
+        <Card key={item.id} className="overflow-hidden flex flex-col">
           <div className="relative h-40">
             <Image
               src={item.photo}
@@ -57,7 +57,7 @@ export function MenuList({ menuItems, onAddToCart }: Readonly<MenuListProps>) {
             <Dialog>
               <DialogTrigger asChild>
                 <button
-                  className="text-xs text-gray-600 line-clamp-2 cursor-pointer"
+                  className="text-xs text-gray-600 line-clamp-2 cursor-pointer text-left"
                   onClick={() => setSelectedItem(item)}
                 >
                   {item.description}
@@ -93,10 +93,10 @@ export function MenuList({ menuItems, onAddToCart }: Readonly<MenuListProps>) {
               )}
             </div>
           </CardContent>
-          <CardFooter className="p-3 pt-0">
+          <CardFooter className="p-3 pt-0 flex-1">
             <Button
               onClick={() => onAddToCart(item)}
-              className="w-full text-sm"
+              className="w-full text-sm mt-auto"
             >
               Add to Cart
             </Button>
