@@ -5,7 +5,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { Discount } from "@/types/Discount";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { FormField } from "@/components/ui/form-field";
+import FormField from "@/components/ui/form-field";
 
 interface DiscountFormProps {
   initialData?: Discount;
