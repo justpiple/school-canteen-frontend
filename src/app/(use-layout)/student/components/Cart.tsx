@@ -17,6 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { calculateDiscountedPrice } from "@/utils/atomics";
+import { confirm } from "@/utils/confirm";
 
 interface CartProps {
   isOpen: boolean;
@@ -48,6 +49,16 @@ export function Cart({
         item.quantity,
     0,
   );
+
+  async function clearCart() {
+    const confirmation = await confirm({
+      title: "Clear Cart?",
+      description: "Are you sure want to clear cart?",
+      confirmLabel: "Yes",
+    });
+
+    if (confirmation) onClearCart();
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -120,7 +131,7 @@ export function Cart({
             <span className="font-bold">Rp {totalPrice.toLocaleString()}</span>
           </div>
           <div className="flex space-x-2">
-            <Button variant="outline" className="w-full" onClick={onClearCart}>
+            <Button variant="outline" className="w-full" onClick={clearCart}>
               <Trash2 className="h-4 w-4 mr-2" />
               Clear Cart
             </Button>
