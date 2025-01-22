@@ -164,7 +164,15 @@ export default function HomePage() {
     }
   };
 
-  const clearCart = () => {
+  const clearCart = async () => {
+    const confirmation = await confirm({
+      title: "Clear Cart?",
+      description: "Are you sure want to clear cart?",
+      confirmLabel: "Yes",
+    });
+
+    if (!confirmation) return;
+
     setCart([]);
     setIsCartOpen(false);
   };
