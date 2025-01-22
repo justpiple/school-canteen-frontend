@@ -20,6 +20,7 @@ export default function HomePage() {
   const [cart, setCart] = useLocalStorage<CartItem[]>("cart", []);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -119,19 +120,53 @@ export default function HomePage() {
     });
   };
 
-  const removeFromCart = (itemId: number) => {
-    setCart((prevCart) =>
-      prevCart
-        .map((item) =>
-          item.id === itemId ? { ...item, quantity: item.quantity - 1 } : item,
-        )
-        .filter((item) => item.quantity > 0),
-    );
+  const decrementQuantity = (prevCart: CartItem[], itemId: number) => {
+    return prevCart
+      .map((item) =>
+        item.id === itemId ? { ...item, quantity: item.quantity - 1 } : item,
+      )
+      .filter((item) => item.quantity > 0);
+  };
+
+  const deleteItem = (prevCart: CartItem[], itemId: number) => {
+    return prevCart.filter((item) => item.id !== itemId);
+  };
+
+  const removeFromCart = async (itemId: number) => {
+    try {
+      const itemCart = cart.find((item) => item.id === itemId);
+
+      if (!itemCart) {
+        throw new Error("Invalid item");
+      }
+
+      if (itemCart.quantity === 1) {
+        const userConfirmed = await confirm({
+          title: "Delete item?",
+          description: "Do you want delete this item from cart?",
+          confirmLabel: "Delete",
+          cancelLabel: "Cancel",
+        });
+
+        if (userConfirmed) {
+          setCart((prevCart) => deleteItem(prevCart, itemId));
+          toast.success("Item removed from cart");
+        }
+        return;
+      }
+
+      setCart((prevCart) => decrementQuantity(prevCart, itemId));
+    } catch (error) {
+      toast.error("Failed to remove item", {
+        description:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      });
+    }
   };
 
   const clearCart = () => {
-    setIsCartOpen(false);
     setCart([]);
+    setIsCartOpen(false);
   };
 
   const placeOrder = async () => {
@@ -141,6 +176,8 @@ export default function HomePage() {
         setIsCartOpen(false);
         return;
       }
+
+      setIsPlacingOrder(true);
 
       const orderData = {
         standId: cart[0].standId,
@@ -165,6 +202,8 @@ export default function HomePage() {
       }
     } catch {
       toast.error("An error occurred while placing the order.");
+    } finally {
+      setIsPlacingOrder(false);
     }
   };
 
@@ -218,6 +257,7 @@ export default function HomePage() {
         onAddItem={addItemToCart}
         onClearCart={clearCart}
         onPlaceOrder={placeOrder}
+        isPlacingOrder={isPlacingOrder}
       />
     </div>
   );

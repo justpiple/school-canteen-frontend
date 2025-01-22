@@ -6,7 +6,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import {
   Dialog,
@@ -22,6 +22,7 @@ interface CartProps {
   isOpen: boolean;
   onClose: () => void;
   cart: CartItem[];
+  isPlacingOrder: boolean;
   onRemoveItem: (itemId: number) => void;
   onAddItem: (item: CartItem) => void;
   onClearCart: () => void;
@@ -36,6 +37,7 @@ export function Cart({
   onAddItem,
   onClearCart,
   onPlaceOrder,
+  isPlacingOrder,
 }: Readonly<CartProps>) {
   const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
 
@@ -122,7 +124,12 @@ export function Cart({
               <Trash2 className="h-4 w-4 mr-2" />
               Clear Cart
             </Button>
-            <Button className="w-full" onClick={onPlaceOrder}>
+            <Button
+              className="w-full"
+              onClick={onPlaceOrder}
+              disabled={isPlacingOrder}
+            >
+              {isPlacingOrder && <Loader2 className="animate-spin" />}
               Place Order
             </Button>
           </div>
