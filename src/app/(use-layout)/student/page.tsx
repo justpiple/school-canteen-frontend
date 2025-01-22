@@ -20,7 +20,7 @@ export default function HomePage() {
   const [cart, setCart] = useLocalStorage<CartItem[]>("cart", []);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isPlacingOrder, setIsPlacingOrder] = useState(true);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
