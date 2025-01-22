@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -14,6 +13,9 @@ import { MenuItem } from "@/types/MenuItem";
 import { apiClient } from "@/lib/auth/browserApiClient";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import FormField from "@/components/ui/form-field";
+
+type MenuType = "FOOD" | "DRINK";
 
 interface MenuItemFormProps {
   initialData?: MenuItem;
@@ -45,11 +47,14 @@ export function MenuItemForm({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "price" ? Number(value) : value,
+    }));
   };
 
-  const handleSelectChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, type: value as "FOOD" | "DRINK" }));
+  const handleSelectChange = (value: MenuType) => {
+    setFormData((prev) => ({ ...prev, type: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -87,8 +92,7 @@ export function MenuItemForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="name">Name</Label>
+      <FormField label="Name" htmlFor="name" required>
         <Input
           id="name"
           name="name"
@@ -97,9 +101,9 @@ export function MenuItemForm({
           required
           disabled={isSubmitting}
         />
-      </div>
-      <div>
-        <Label htmlFor="description">Description</Label>
+      </FormField>
+
+      <FormField label="Description" htmlFor="description">
         <Textarea
           id="description"
           name="description"
@@ -107,21 +111,23 @@ export function MenuItemForm({
           onChange={handleChange}
           disabled={isSubmitting}
         />
-      </div>
-      <div>
-        <Label htmlFor="price">Price</Label>
+      </FormField>
+
+      <FormField label="Price" htmlFor="price" required>
         <Input
           id="price"
           name="price"
           type="number"
+          min={0}
+          step={1000}
           value={formData.price}
           onChange={handleChange}
           required
           disabled={isSubmitting}
         />
-      </div>
-      <div>
-        <Label htmlFor="type">Type</Label>
+      </FormField>
+
+      <FormField label="Type" htmlFor="type" required>
         <Select
           name="type"
           value={formData.type}
@@ -136,9 +142,9 @@ export function MenuItemForm({
             <SelectItem value="DRINK">Drink</SelectItem>
           </SelectContent>
         </Select>
-      </div>
-      <div>
-        <Label htmlFor="photo">Photo URL</Label>
+      </FormField>
+
+      <FormField label="Photo" htmlFor="photo" required={!initialData}>
         <Input
           id="photo"
           name="photo"
@@ -147,7 +153,8 @@ export function MenuItemForm({
           accept="image/*"
           disabled={isSubmitting}
         />
-      </div>
+      </FormField>
+
       <div className="flex justify-end space-x-2">
         <Button
           type="button"

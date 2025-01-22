@@ -59,14 +59,14 @@ export function DiscountDetail({
         <CardTitle>{discount.name} Details</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div>
+        <>
           <p className="font-bold">{discount.percentage}% Off</p>
           <p className="text-sm text-muted-foreground">
             Valid from {format(discount.startDate, "MMMM dd, yyyy")} to{" "}
             {format(discount.endDate, "MMMM dd, yyyy")}
           </p>
-        </div>
-        <div>
+        </>
+        <>
           <h3 className="text-lg font-semibold mb-2">Applicable Menus</h3>
           <div className="space-y-2">
             {allMenus.map((menu) => (
@@ -85,7 +85,7 @@ export function DiscountDetail({
               </div>
             ))}
           </div>
-        </div>
+        </>
         <div className="flex justify-end space-x-2">
           <Button variant="outline" onClick={onClose}>
             Close

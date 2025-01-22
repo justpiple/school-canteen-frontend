@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { Label } from "@/components/ui/label";
+import FormField from "@/components/ui/form-field";
 import { Loader2, Store, User } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProviders";
 import { removeEmptyObjects } from "@/utils/atomics";
@@ -25,6 +25,117 @@ interface UserData {
   password: string;
 }
 
+function StandForm({
+  formData,
+  onChange,
+  onSubmit,
+  isSubmitting,
+}: Readonly<{
+  formData: StandData;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (e: React.FormEvent) => Promise<void>;
+  isSubmitting: boolean;
+}>) {
+  return (
+    <form onSubmit={onSubmit} className="space-y-4">
+      <FormField label="Stand Name" htmlFor="standName" required>
+        <Input
+          type="text"
+          id="standName"
+          name="standName"
+          value={formData.standName}
+          onChange={onChange}
+          required
+          autoComplete="off"
+          disabled={isSubmitting}
+        />
+      </FormField>
+
+      <FormField label="Owner Name" htmlFor="ownerName" required>
+        <Input
+          type="text"
+          id="ownerName"
+          name="ownerName"
+          value={formData.ownerName}
+          onChange={onChange}
+          autoComplete="off"
+          required
+          disabled={isSubmitting}
+        />
+      </FormField>
+
+      <FormField label="Phone Number" htmlFor="phone" required>
+        <Input
+          type="tel"
+          id="phone"
+          name="phone"
+          value={formData.phone}
+          onChange={onChange}
+          autoComplete="off"
+          required
+          disabled={isSubmitting}
+        />
+      </FormField>
+
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
+        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        Save Stand Data
+      </Button>
+    </form>
+  );
+}
+
+function UserForm({
+  userData,
+  onChange,
+  onSubmit,
+  isSubmitting,
+}: Readonly<{
+  userData: UserData;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (e: React.FormEvent) => Promise<void>;
+  isSubmitting: boolean;
+}>) {
+  return (
+    <form onSubmit={onSubmit} className="space-y-4">
+      <FormField label="Username" htmlFor="username" required>
+        <Input
+          type="text"
+          id="username"
+          name="username"
+          value={userData.username}
+          onChange={onChange}
+          required
+          autoComplete="off"
+          disabled={isSubmitting}
+        />
+      </FormField>
+
+      <FormField
+        label="New Password"
+        htmlFor="password"
+        helpText="Leave blank if you do not want to change the password"
+      >
+        <Input
+          type="password"
+          id="password"
+          name="password"
+          value={userData.password}
+          onChange={onChange}
+          autoComplete="new-password"
+          disabled={isSubmitting}
+        />
+      </FormField>
+
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
+        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        Save User Data
+      </Button>
+    </form>
+  );
+}
+
+// Main Profile Page Component
 const ProfilePage = () => {
   const { user } = useAuth();
   const [standData, setStandData] = useState<StandData | null>(null);
@@ -181,94 +292,23 @@ const ProfilePage = () => {
 
         <TabsContent value="stand">
           <Card className="p-4">
-            <form onSubmit={handleStandSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="standName">Stand Name</Label>
-                <Input
-                  type="text"
-                  id="standName"
-                  name="standName"
-                  value={formData.standName}
-                  onChange={handleStandChange}
-                  required
-                  autoComplete="off"
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="ownerName">Owner Name</Label>
-                <Input
-                  type="text"
-                  id="ownerName"
-                  name="ownerName"
-                  value={formData.ownerName}
-                  onChange={handleStandChange}
-                  autoComplete="off"
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleStandChange}
-                  autoComplete="off"
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Save Stand Data
-              </Button>
-            </form>
+            <StandForm
+              formData={formData}
+              onChange={handleStandChange}
+              onSubmit={handleStandSubmit}
+              isSubmitting={isSubmitting}
+            />
           </Card>
         </TabsContent>
 
         <TabsContent value="user">
           <Card className="p-4">
-            <form onSubmit={handleUserSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  type="text"
-                  id="username"
-                  name="username"
-                  value={userData.username}
-                  onChange={handleUserChange}
-                  required
-                  autoComplete="off"
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">New Password</Label>
-                <Input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={userData.password}
-                  onChange={handleUserChange}
-                  autoComplete="new-password"
-                  disabled={isSubmitting}
-                />
-                <p className="text-sm text-muted-foreground">
-                  Leave blank if you do not want to change the password
-                </p>
-              </div>
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Save User Data
-              </Button>
-            </form>
+            <UserForm
+              userData={userData}
+              onChange={handleUserChange}
+              onSubmit={handleUserSubmit}
+              isSubmitting={isSubmitting}
+            />
           </Card>
         </TabsContent>
       </Tabs>

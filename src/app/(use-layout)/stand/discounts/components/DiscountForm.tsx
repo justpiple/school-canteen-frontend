@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Discount } from "@/types/Discount";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { FormField } from "@/components/ui/form-field";
 
 interface DiscountFormProps {
   initialData?: Discount;
@@ -70,8 +70,7 @@ export function DiscountForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="name">Discount Name</Label>
+      <FormField label="Discount Name" htmlFor="name" required>
         <Input
           id="name"
           name="name"
@@ -80,9 +79,9 @@ export function DiscountForm({
           required
           disabled={isSubmitting}
         />
-      </div>
-      <div>
-        <Label htmlFor="percentage">Discount Percentage</Label>
+      </FormField>
+
+      <FormField label="Discount Percentage" htmlFor="percentage" required>
         <Input
           id="percentage"
           name="percentage"
@@ -94,23 +93,24 @@ export function DiscountForm({
           required
           disabled={isSubmitting}
         />
-      </div>
-      <div>
-        <Label htmlFor="startDate">Start Date</Label>
+      </FormField>
+
+      <FormField label="Start Date" htmlFor="startDate" required>
         <DatePicker
           id="startDate"
           date={new Date(formData.startDate)}
           onSelect={(date) => handleDateChange(date, "startDate")}
         />
-      </div>
-      <div>
-        <Label htmlFor="endDate">End Date</Label>
+      </FormField>
+
+      <FormField label="End Date" htmlFor="endDate" required>
         <DatePicker
           id="endDate"
           date={new Date(formData.endDate)}
           onSelect={(date) => handleDateChange(date, "endDate")}
         />
-      </div>
+      </FormField>
+
       <div className="flex justify-end space-x-2">
         <Button
           type="button"
