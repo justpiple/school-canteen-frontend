@@ -15,7 +15,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Utensils } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import Image from "next/image";
 import { AxiosError } from "axios";
 import Link from "next/link";
 
@@ -24,11 +25,13 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | string[] | null>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
 
     try {
       await login(username, password);
@@ -37,6 +40,8 @@ const LoginPage = () => {
       const e = err as AxiosError;
       const message = (e.response?.data as any)?.message;
       setError(Array.isArray(message) ? message : [message || e.message]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,7 +50,13 @@ const LoginPage = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-2">
-            <Utensils className="h-12 w-12 text-primary" />
+            <Image
+              src={"/logo-large.png"}
+              alt="Logo"
+              className="w-20 h-20"
+              width={100}
+              height={100}
+            />
           </div>
           <CardTitle className="text-2xl font-bold text-center">
             School Canteen Login
@@ -82,6 +93,7 @@ const LoginPage = () => {
                 required
                 placeholder="Enter your username"
                 autoComplete="off"
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -93,10 +105,18 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="Enter your password"
+                disabled={isLoading}
               />
             </div>
-            <Button type="submit" className="w-full">
-              Log In
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Logging in...
+                </>
+              ) : (
+                "Log In"
+              )}
             </Button>
           </form>
         </CardContent>

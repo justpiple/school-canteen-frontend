@@ -1,11 +1,11 @@
 import { CartItem } from "@/types/Menu";
 import { Button } from "@/components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -61,12 +61,15 @@ export function Cart({
   }
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="bottom" className="h-[80vh] rounded-t-3xl">
-        <SheetHeader className="relative">
-          <SheetTitle>Your Cart</SheetTitle>
-        </SheetHeader>
-        <div className="mt-4 space-y-4 overflow-y-auto max-h-[calc(80vh-12rem)]">
+    <Drawer open={isOpen} onOpenChange={onClose}>
+      <DrawerContent className="h-[80vh] rounded-t-3xl">
+        <DrawerHeader className="relative">
+          <DrawerTitle>Your Cart</DrawerTitle>
+        </DrawerHeader>
+        <div
+          className="px-4 mt-4 space-y-4 overflow-y-auto pb-32"
+          style={{ maxHeight: "calc(80vh - 9rem)" }}
+        >
           {cart.map((item) => (
             <div key={item.id} className="flex items-center justify-between">
               <Dialog>
@@ -125,7 +128,7 @@ export function Cart({
             </div>
           ))}
         </div>
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t">
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t">
           <div className="flex justify-between items-center mb-4">
             <span className="font-semibold">Total:</span>
             <span className="font-bold">Rp {totalPrice.toLocaleString()}</span>
@@ -140,12 +143,12 @@ export function Cart({
               onClick={onPlaceOrder}
               disabled={isPlacingOrder}
             >
-              {isPlacingOrder && <Loader2 className="animate-spin" />}
+              {isPlacingOrder && <Loader2 className="animate-spin mr-2" />}
               Place Order
             </Button>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   );
 }

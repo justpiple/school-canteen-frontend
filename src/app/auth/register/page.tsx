@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Utensils, GraduationCap, Store } from "lucide-react";
+import { GraduationCap, Store, Loader2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 type ApiResponse = {
@@ -36,6 +37,7 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [apiResponse, setApiResponse] = useState<ApiResponse | null>(null);
   const [userType, setUserType] = useState("STUDENT");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const validateForm = () => {
@@ -55,6 +57,7 @@ const RegisterPage = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setApiResponse(null);
+    setIsLoading(true);
 
     const validationErrors = validateForm();
     if (validationErrors.length > 0) {
@@ -63,13 +66,20 @@ const RegisterPage = () => {
         statusCode: 400,
         error: "Bad Request",
       });
+      setIsLoading(false);
       return;
     }
 
-    const response = await register(username, password, userType);
-    setApiResponse(response);
-    if (response.status === "success") {
-      setTimeout(() => router.push("/auth/login"), 2000);
+    try {
+      const response = await register(username, password, userType);
+      setApiResponse(response);
+      if (response.status === "success") {
+        setTimeout(() => router.push("/auth/login"), 2000);
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,7 +88,13 @@ const RegisterPage = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-2">
-            <Utensils className="h-12 w-12 text-primary" />
+            <Image
+              src={"/logo-large.png"}
+              alt="Logo"
+              className="w-20 h-20"
+              width={100}
+              height={100}
+            />
           </div>
           <CardTitle className="text-2xl font-bold text-center">
             Create an Account
@@ -116,11 +132,11 @@ const RegisterPage = () => {
             onValueChange={(value) => setUserType(value)}
           >
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="STUDENT">
+              <TabsTrigger value="STUDENT" disabled={isLoading}>
                 <GraduationCap className="mr-2 h-4 w-4" />
                 Student
               </TabsTrigger>
-              <TabsTrigger value="ADMIN_STAND">
+              <TabsTrigger value="ADMIN_STAND" disabled={isLoading}>
                 <Store className="mr-2 h-4 w-4" />
                 Stand Owner
               </TabsTrigger>
@@ -143,10 +159,12 @@ const RegisterPage = () => {
                 id="username"
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value.replace(/\s/g, ""))}
                 required
                 placeholder={`Enter your username`}
+                pattern="\S(.*\S)?"
                 autoComplete="off"
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -158,6 +176,7 @@ const RegisterPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="Enter your password"
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -169,10 +188,18 @@ const RegisterPage = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 placeholder="Confirm your password"
+                disabled={isLoading}
               />
             </div>
-            <Button type="submit" className="w-full">
-              Register
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Registering...
+                </>
+              ) : (
+                "Register"
+              )}
             </Button>
           </form>
         </CardContent>

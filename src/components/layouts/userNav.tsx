@@ -46,7 +46,7 @@ export function UserNav({ user }: Readonly<{ user: User }>) {
               )
             }
           >
-            Profil
+            Profile
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -54,7 +54,7 @@ export function UserNav({ user }: Readonly<{ user: User }>) {
           className="px-4 py-2.5 text-red-600"
           onClick={() => logout()}
         >
-          Keluar
+          Logout
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

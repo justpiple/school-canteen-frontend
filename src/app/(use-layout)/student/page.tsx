@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { StandList } from "./components/StandList";
-import { MenuList } from "./components/MenuList";
 import { CartButton } from "./components/CartButton";
 import { Cart } from "./components/Cart";
 import { apiClient } from "@/lib/auth/browserApiClient";
@@ -12,11 +10,10 @@ import { confirm } from "@/utils/confirm";
 import Image from "next/image";
 import { useRouter } from "next-nprogress-bar";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import Stands from "./components/Stands";
 
 export default function HomePage() {
   const [stands, setStands] = useState<Stand[]>([]);
-  const [selectedStand, setSelectedStand] = useState<Stand | null>(null);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [cart, setCart] = useLocalStorage<CartItem[]>("cart", []);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,12 +24,6 @@ export default function HomePage() {
     fetchStands();
     fetchStudentData();
   }, []);
-
-  useEffect(() => {
-    if (selectedStand) {
-      fetchMenuItems(selectedStand.id);
-    }
-  }, [selectedStand]);
 
   const fetchStudentData = async () => {
     try {
@@ -56,22 +47,6 @@ export default function HomePage() {
       }
     } catch {
       toast.error("An error occurred while fetching stands.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fetchMenuItems = async (standId: number) => {
-    setIsLoading(true);
-    try {
-      const response = await apiClient({ url: `/menu/stand/${standId}` });
-      if (response.statusCode === 200) {
-        setMenuItems(response.data);
-      } else {
-        toast.error("Failed to fetch menu items.");
-      }
-    } catch {
-      toast.error("An error occurred while fetching menu items.");
     } finally {
       setIsLoading(false);
     }
@@ -209,40 +184,35 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen pb-20" suppressHydrationWarning>
-      <div className="mx-auto max-w-md sm:p-6 md:max-w-2xl lg:max-w-4xl min-h-screen p-4">
-        <h1 className="text-3xl font-bold mb-4">Food Ordering App</h1>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 min-h-screen py-8">
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
           </div>
         ) : (
           <>
-            {!selectedStand && (
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-4">
-                  Welcome to our Food Ordering App!
-                </h2>
-                <p className="text-gray-600 mb-4">
-                  Choose from a variety of delicious meals from our local
-                  stands.
-                </p>
+            <div className="mb-8">
+              <div className="relative rounded-xl overflow-hidden">
                 <Image
                   src="/food-banner.jpg"
                   alt="Delicious Food"
-                  width={400}
-                  height={200}
-                  className="rounded-lg shadow-md"
+                  width={1200}
+                  height={400}
+                  className="w-full object-cover max-h-[400px]"
                 />
+                <div className="absolute inset-0 bg-black/40 flex items-center">
+                  <div className="p-8 text-white max-w-2xl">
+                    <h2 className="text-xl lg:text-3xl font-bold mb-4">
+                      Welcome to our School Canteen!
+                    </h2>
+                    <p className="text-base lg:text-lg">
+                      Choose from a variety of delicious meals from our canteen.
+                    </p>
+                  </div>
+                </div>
               </div>
-            )}
-            <StandList
-              stands={stands}
-              selectedStand={selectedStand}
-              onSelectStand={setSelectedStand}
-            />
-            {selectedStand && (
-              <MenuList menuItems={menuItems} onAddToCart={addToCart} />
-            )}
+            </div>
+            <Stands stands={stands} onAddToCart={addToCart} />
           </>
         )}
       </div>

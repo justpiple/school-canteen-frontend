@@ -70,7 +70,7 @@ export function AppShell({ children, user }: Readonly<AppShellProps>) {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="font-bold text-xl">Canteen App</span>
+            <span className="font-bold text-xl">School Canteen</span>
           </Link>
           <MainNav items={items} className="mx-6 hidden md:flex" />
           <div className="flex items-center space-x-4">
