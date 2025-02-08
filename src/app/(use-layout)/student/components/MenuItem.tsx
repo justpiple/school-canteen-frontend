@@ -61,6 +61,9 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, onAddToCart }) => {
           <DialogContent className="sm:max-w-3xl max-h-[90vh] p-0">
             <DialogHeader className="p-4">
               <DialogTitle>{item.name}</DialogTitle>
+              <DialogDescription className="mt-2">
+                {item.description}
+              </DialogDescription>
             </DialogHeader>
             <div className="relative aspect-video w-full">
               <Image
