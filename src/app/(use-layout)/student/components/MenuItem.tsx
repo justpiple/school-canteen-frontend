@@ -30,24 +30,49 @@ interface MenuItemCardProps {
 
 const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, onAddToCart }) => {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
+  const [showImagePreview, setShowImagePreview] = useState<boolean>(false);
 
   return (
     <Card className="overflow-hidden flex flex-col group transition-all">
       <div className="relative aspect-video bg-muted">
-        <div
-          className={cn(
-            "absolute inset-0 bg-muted",
-            isImageLoading ? "animate-pulse" : "hidden",
-          )}
-        />
-        <Image
-          src={item.photo}
-          alt={item.name}
-          layout="fill"
-          objectFit="cover"
-          className={cn(isImageLoading ? "opacity-0" : "opacity-100")}
-          onLoadingComplete={() => setIsImageLoading(false)}
-        />
+        <Dialog open={showImagePreview} onOpenChange={setShowImagePreview}>
+          <DialogTrigger asChild>
+            <button className="w-full h-full">
+              <div
+                className={cn(
+                  "absolute inset-0 bg-muted",
+                  isImageLoading ? "animate-pulse" : "hidden",
+                )}
+              />
+              <Image
+                src={item.photo}
+                alt={item.name}
+                layout="fill"
+                objectFit="cover"
+                className={cn(
+                  isImageLoading ? "opacity-0" : "opacity-100",
+                  "cursor-pointer hover:opacity-90 transition-opacity",
+                )}
+                onLoadingComplete={() => setIsImageLoading(false)}
+              />
+            </button>
+          </DialogTrigger>
+
+          <DialogContent className="sm:max-w-3xl max-h-[90vh] p-0">
+            <DialogHeader className="p-4">
+              <DialogTitle>{item.name}</DialogTitle>
+            </DialogHeader>
+            <div className="relative aspect-video w-full">
+              <Image
+                src={item.photo}
+                alt={item.name}
+                layout="fill"
+                objectFit="contain"
+                className="rounded-lg"
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
         {item.discount && (
           <Badge variant="destructive" className="absolute top-2 right-2">
             {item.discount.percentage}% OFF
